@@ -4,7 +4,7 @@ from main_window import MainWindow
 from display import Display
 from info import Info
 from styles import setupTheme
-from buttons import Button
+from buttons import ButtonsGrid
 
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
@@ -23,15 +23,15 @@ if __name__ == '__main__':
 
     # Info
     info = Info('2.0 ^ 2.0 = 4.0')
-    window.addToVLayout(info)
+    window.addWidgetToVLayout(info)
 
     # Display
     display = Display()
-    window.addToVLayout(display)
+    window.addWidgetToVLayout(display)
 
-    # Button
-    button = Button('Text 1')
-    window.addToVLayout(button)
+    # Grid
+    buttonsGrid = ButtonsGrid()
+    window.vLayout.addLayout(buttonsGrid)
 
     # Execution
     window.adjustFixedSize()
