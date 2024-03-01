@@ -30,7 +30,7 @@ class ButtonsGrid(QGridLayout):
         super().__init__(*args, **kwargs)
 
         self._gridMask = [
-            ['C', '◀', '^', '/'],
+            ['C', 'Del', '^', '/'],
             ['7', '8', '9', '*'],
             ['4', '5', '6', '-'],
             ['1', '2', '3', '+'],
@@ -39,7 +39,7 @@ class ButtonsGrid(QGridLayout):
         self.display = display
         self.info = info
         self._equation = ''
-        self._equationInitialValue = 'Sua conta'
+        self._equationInitialValue = '0'
         self._left = None
         self._right = None
         self._op = None
@@ -79,6 +79,11 @@ class ButtonsGrid(QGridLayout):
         if text == 'C':
             # slot = self._makeSlot(self._clear, '✅ Essa é a mensagem.')
             self._connectButtonClicked(button, self._clear)
+
+        if text in 'Del':
+            self._connectButtonClicked(
+                button,
+                self.display.backspace)
 
         if text in '+-/*^':
             self._connectButtonClicked(
