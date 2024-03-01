@@ -143,7 +143,8 @@ class ButtonsGrid(QGridLayout):
         displayText = self.display.text()
 
         if not isValidNumber(displayText):
-            print('Sem nada para a direita')
+            self._showInfo('Você precisa digitar outro número.')
+            # print('Sem nada para a direita')
             return
 
         self._right = float(displayText)
@@ -157,7 +158,8 @@ class ButtonsGrid(QGridLayout):
             else:
                 result = eval(self.equation)
         except (ZeroDivisionError, NameError, OverflowError):
-            print('Error')
+            self._showError('ERROR')
+            # print('Error')
 
         self.display.clear()
         self.info.setText(f'{self._equation} = {result}')
@@ -171,4 +173,16 @@ class ButtonsGrid(QGridLayout):
         msgBox = self.window.makeMsgBox()
         msgBox.setText(text)
         msgBox.setIcon(msgBox.Icon.Warning)
+
+        msgBox.setStandardButtons(msgBox.StandardButton.Ok)
+
+        # Caso queira traduzir a msg do botão de forma rápida
+        # msgBox.button(msgBox.StandardButton.Close).setText('Fechar')
+
+        msgBox.exec()
+
+    def _showInfo(self, text):
+        msgBox = self.window.makeMsgBox()
+        msgBox.setText(text)
+        msgBox.setIcon(msgBox.Icon.Information)
         msgBox.exec()
