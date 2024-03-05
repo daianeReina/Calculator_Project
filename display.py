@@ -15,6 +15,7 @@ class Display(QLineEdit):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.configStyle()
+        self.setReadOnly(True)
 
     def configStyle(self):
         margins = [TEXT_MARGIN for _ in range(4)]
