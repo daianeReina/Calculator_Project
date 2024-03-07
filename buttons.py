@@ -65,7 +65,7 @@ class ButtonsGrid(QGridLayout):
     @Slot()
     def _makeGrid(self):
         self.display.enterPressed.connect(self._equal)
-        self.display.delPressed.connect(self.display.backspace)
+        self.display.delPressed.connect(self._backspace)
         self.display.clearPressed.connect(self._clear)
         self.display.inputPressed.connect(self._insertToDisplay)
         self.display.operatorPressed.connect(self._configLeftOp)
@@ -138,6 +138,8 @@ class ButtonsGrid(QGridLayout):
 
         self.display.insert(text)
 
+        self.display.setFocus()
+
     @Slot()
     def _clear(self):
         self._left = None
@@ -145,12 +147,14 @@ class ButtonsGrid(QGridLayout):
         self._op = None
         self.equation = self._equationInitialValue
         self.display.clear()
+        self.display.setFocus()
 
     @Slot()
     def _configLeftOp(self, text):
 
         displayText = self.display.text()  # deverá ser o meu número _left
         self.display.clear()  # Limpa o display
+        self.display.setFocus()
 
         # Se a pessoa clicou no operador sem configurar qualquer número
         if not isValidNumber(displayText) and self._left is None:
@@ -170,7 +174,7 @@ class ButtonsGrid(QGridLayout):
     def _equal(self):
         displayText = self.display.text()
 
-        if not isValidNumber(displayText):
+        if not isValidNumber(displayText) or self._left is None:
             self._showInfo('Você precisa digitar outro número.')
             # print('Sem nada para a direita')
             return
@@ -180,8 +184,9 @@ class ButtonsGrid(QGridLayout):
         result = 'Error'
 
         try:
-            if '^' in self.equation and isinstance(self._left, float):
+            if '^' in self.equation and isinstance(self._left, int | float):
                 result = math.pow(self._left, self._right)
+                result = convertToNumber(str(result))
 
             else:
                 result = eval(self.equation)
@@ -193,6 +198,7 @@ class ButtonsGrid(QGridLayout):
         self.info.setText(f'{self._equation} = {result}')
         self._left = result
         self._right = None
+        self.display.setFocus()
 
         if result == 'Error':
             self._left = None
@@ -208,6 +214,11 @@ class ButtonsGrid(QGridLayout):
         # msgBox.button(msgBox.StandardButton.Close).setText('Fechar')
 
         msgBox.exec()
+
+    @Slot()
+    def _backspace(self):
+        self.display.backspace()
+        self.display.setFocus()
 
     def _showInfo(self, text):
         msgBox = self.window.makeMsgBox()
